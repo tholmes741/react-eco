@@ -2,8 +2,9 @@ import React, { useEffect }from 'react';
 import { connect } from 'react-redux';
 import TodoListItem from './TodoListItem';
 import TodoForm from './TodoForm'
-import { loadTodos , removeTodoRequest } from './thunks'
+import { loadTodos , removeTodoRequest, markTodoAsCompletedRequest } from './thunks'
 import { completeTodo } from './actions';
+import { getTodos, getTodosLoading } from './selectors';
 import './TodoList.css';
 
 const TodoList = ({ todos = [], onRemovePressed, onCompletePressed, isLoading, startLoadingTodos }) => {
@@ -26,14 +27,14 @@ const TodoList = ({ todos = [], onRemovePressed, onCompletePressed, isLoading, s
 }
 
 const mapStateToProps = state => ({
-    todos: state.todos,
-    isLoading: state.isLoading
+    todos: getTodos(state),
+    isLoading: getTodosLoading(state)
 });
 
 const mapDispatchToProps = dispatch => ({
     startLoadingTodos: () => dispatch(loadTodos()),
     onRemovePressed: id => dispatch(removeTodoRequest(id)),
-    onCompletePressed: text => dispatch(completeTodo(text))
+    onCompletePressed: id => dispatch(markTodoAsCompletedRequest(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
